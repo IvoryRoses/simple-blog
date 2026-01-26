@@ -71,3 +71,4 @@ export default defineConfig([
   },
 ])
 ```
+# simple-blog
