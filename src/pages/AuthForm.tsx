@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { supabase } from "../supabase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../slices/authSlice";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -7,11 +10,20 @@ export default function AuthForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    if (!isLogin && password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
 
     try {
       if (isLogin) {
@@ -20,14 +32,22 @@ export default function AuthForm() {
           password,
         });
         if (error) setError(error.message);
-        else if (data.user) alert(`Logged in as ${data.user.email}`);
+        else if (data.user) {
+          dispatch(
+            setUser({
+              id: data.user.id,
+              email: data.user.email!,
+            }),
+          );
+          navigate("/blogs");
+        }
       } else {
         const { error } = await supabase.auth.signUp({
           email,
           password,
         });
         if (error) setError(error.message);
-        else alert("Registration successful! Check your email to confirm.");
+        else console.log("Registration successful");
       }
     } catch (err) {
       setError("Something went wrong. Try again.");
@@ -79,6 +99,22 @@ export default function AuthForm() {
             required
           />
         </div>
+
+        {!isLogin && (
+          <div className="mb-6">
+            <label className="mb-2 block text-sm font-semibold text-gray-700">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+              placeholder="********"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+        )}
 
         <button
           type="submit"

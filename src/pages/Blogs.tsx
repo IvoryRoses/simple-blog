@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../slices/authSlice";
 import { supabase } from "../supabase";
-import type { RootState } from "../store";
+import type { RootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
 
 export default function Blogs() {
