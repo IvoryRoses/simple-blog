@@ -4,17 +4,18 @@ import { clearUser } from "../slices/authSlice";
 import { supabase } from "../supabase";
 import { useNavigate, Link } from "react-router-dom";
 
-interface Blog {
+export interface Blog {
   id: string;
   title: string;
   content: string;
+  author_id: string;
   created_at: string;
 }
 
 export default function BlogsList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [userId, setUserId] = useState<string | null>(null);
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
   const fetchBlogs = async () => {
@@ -27,6 +28,10 @@ export default function BlogsList() {
   };
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id ?? null);
+    });
+
     fetchBlogs();
   }, []);
 
@@ -50,7 +55,6 @@ export default function BlogsList() {
   return (
     <div className="min-h-screen bg-linear-to-r from-purple-400 via-pink-400 to-red-400 p-8">
       <div className="mx-auto max-w-3xl rounded-xl bg-white p-8 shadow-2xl">
-        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-800">Blogs</h1>
 
@@ -83,19 +87,23 @@ export default function BlogsList() {
                 <p className="mt-2 text-gray-700">{blog.content}</p>
 
                 <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => navigate(`/blogs/${blog.id}/edit`)}
-                    className="rounded bg-blue-500 px-3 py-1 text-white"
-                  >
-                    Edit
-                  </button>
+                  {blog.author_id === userId && (
+                    <div className="mt-4 flex gap-2">
+                      <button
+                        onClick={() => navigate(`/blogs/${blog.id}/edit`)}
+                        className="rounded bg-blue-500 px-3 py-1 text-white"
+                      >
+                        Edit
+                      </button>
 
-                  <button
-                    onClick={() => handleDelete(blog.id)}
-                    className="rounded bg-red-500 px-3 py-1 text-white"
-                  >
-                    Delete
-                  </button>
+                      <button
+                        onClick={() => handleDelete(blog.id)}
+                        className="rounded bg-red-500 px-3 py-1 text-white"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
