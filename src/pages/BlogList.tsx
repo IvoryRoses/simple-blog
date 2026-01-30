@@ -17,15 +17,29 @@ export default function BlogsList() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const PAGE_SIZE = 5;
 
-  const fetchBlogs = async () => {
-    const { data } = await supabase
+  const fetchBlogs = async (pageNumber = page) => {
+    const from = (pageNumber - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data, count, error } = await supabase
       .from("blogs")
-      .select("*")
-      .order("created_at", { ascending: false });
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(from, to);
 
-    if (data) setBlogs(data);
+    if (!error && data) {
+      setBlogs(data);
+      setTotal(count ?? 0);
+    }
   };
+
+  useEffect(() => {
+    fetchBlogs(page);
+  }, [page]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -109,6 +123,27 @@ export default function BlogsList() {
             ))}
           </div>
         )}
+        <div className="mt-8 flex items-center justify-between">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+            className="rounded bg-gray-200 px-4 py-2 disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          <span className="text-sm text-gray-600">
+            Page {page} of {Math.ceil(total / PAGE_SIZE)}
+          </span>
+
+          <button
+            disabled={page * PAGE_SIZE >= total}
+            onClick={() => setPage((p) => p + 1)}
+            className="rounded bg-gray-200 px-4 py-2 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
