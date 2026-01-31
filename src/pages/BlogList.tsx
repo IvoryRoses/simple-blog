@@ -10,6 +10,7 @@ export interface Blog {
   content: string;
   author_id: string;
   created_at: string;
+  image_url?: string;
 }
 
 export default function BlogsList() {
@@ -98,6 +99,12 @@ export default function BlogsList() {
                 className="rounded-xl border bg-white p-6 shadow-md"
               >
                 <h2 className="text-xl font-bold">{blog.title}</h2>
+                {blog.image_url && (
+                  <img
+                    src={blog.image_url}
+                    className="mb-4 h-96 w-full rounded object-cover"
+                  />
+                )}
                 <p className="mt-2 text-gray-700">{blog.content}</p>
 
                 <div className="mt-4 flex gap-2">

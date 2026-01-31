@@ -12,15 +12,44 @@ export default function BlogCreate() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
+    let imageUrl: string | null = null;
+
+    if (image && user) {
+      const fileExt = image.name.split(".").pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError, data: uploadData } = await supabase.storage
+        .from("blog-image")
+        .upload(fileName, image, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error("Upload error details:", uploadError);
+        setError(uploadError.message);
+        setLoading(false);
+        return;
+      }
+
+      const { data } = supabase.storage
+        .from("blog-image")
+        .getPublicUrl(fileName);
+
+      imageUrl = data.publicUrl;
+    }
+
     const { error } = await supabase.from("blogs").insert({
       title,
       content,
+      image_url: imageUrl,
       author_id: user?.id,
     });
 
@@ -50,6 +79,13 @@ export default function BlogCreate() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+          />
+
+          <input
+            type="file"
+            accept="image/*"
+            className="mb-4 w-full"
+            onChange={(e) => setImage(e.target.files?.[0] ?? null)}
           />
 
           <textarea
