@@ -11,6 +11,7 @@ export default function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [authorName, setAuthorName] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -42,9 +43,14 @@ export default function AuthForm() {
           navigate("/blogs");
         }
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              author_name: authorName,
+            },
+          },
         });
         if (error) setError(error.message);
         else console.log("Registration successful");
@@ -70,6 +76,22 @@ export default function AuthForm() {
           <p className="mb-6 rounded bg-red-100 p-3 text-center text-red-700">
             {error}
           </p>
+        )}
+
+        {!isLogin && (
+          <div className="mb-6">
+            <label className="mb-2 block text-sm font-semibold text-gray-700">
+              Author Name
+            </label>
+            <input
+              type="text"
+              className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+              placeholder="Your Name"
+              value={authorName}
+              onChange={(e) => setAuthorName(e.target.value)}
+              required
+            />
+          </div>
         )}
 
         <div className="mb-6">

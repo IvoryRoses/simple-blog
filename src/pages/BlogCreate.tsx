@@ -51,6 +51,7 @@ export default function BlogCreate() {
       content,
       image_url: imageUrl,
       author_id: user?.id,
+      author_name: user?.user_metadata?.author_name || "Anonymous",
     });
 
     if (error) {
