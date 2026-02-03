@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 import type { Blog } from "./BlogList";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { RiPencilFill } from "react-icons/ri";
 
 export default function BlogView() {
   const { id } = useParams<{ id: string }>();
@@ -61,20 +63,38 @@ export default function BlogView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-[#f6f7f9] p-8">
       <div className="mx-auto max-w-4xl rounded-xl bg-white p-8 shadow-lg">
-        <button
-          onClick={() => navigate("/blogs")}
-          className="mb-4 text-blue-500 hover:underline"
-        >
-          ← Back to Blogs
-        </button>
+        <div className="mb-4 flex items-center justify-between">
+          <button
+            onClick={() => navigate("/blogs")}
+            className="mb-4 text-blue-500 hover:underline"
+          >
+            ← Back to Blogs
+          </button>
+          {blog.author_id === userId && (
+            <div className="flex gap-2">
+              <button
+                onClick={() => navigate(`/blogs/${blog.id}/edit`)}
+                className="rounded bg-gray-100 px-2 py-1 text-sm text-black hover:bg-gray-300"
+              >
+                <RiPencilFill /> Edit Post
+              </button>
+              <button
+                onClick={handleDelete}
+                className="rounded bg-red-100 px-2 py-1 text-sm text-red-600 hover:bg-red-200"
+              >
+                <FaRegTrashAlt /> Delete
+              </button>
+            </div>
+          )}
+        </div>
 
         {blog.image_url && (
           <img
             src={blog.image_url}
             alt={blog.title}
-            className="mb-6 h-96 w-full rounded-xl object-cover"
+            className="mb-6 h-full w-full rounded-xl object-cover"
           />
         )}
 
@@ -89,23 +109,6 @@ export default function BlogView() {
         <div className="prose prose-lg max-w-none">
           <p className="whitespace-pre-wrap text-gray-700">{blog.content}</p>
         </div>
-
-        {blog.author_id === userId && (
-          <div className="mt-8 flex gap-2 border-t pt-6">
-            <button
-              onClick={() => navigate(`/blogs/${blog.id}/edit`)}
-              className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-            >
-              Edit
-            </button>
-            <button
-              onClick={handleDelete}
-              className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-            >
-              Delete
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

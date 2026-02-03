@@ -64,7 +64,7 @@ export default function BlogCreate() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-r from-purple-400 via-pink-400 to-red-400 p-8">
+    <div className="min-h-screen bg-[#f6f7f9] p-8">
       <div className="mx-auto max-w-2xl rounded-xl bg-white p-8 shadow-2xl">
         <h1 className="mb-6 text-2xl font-bold text-gray-800">Create Blog</h1>
 

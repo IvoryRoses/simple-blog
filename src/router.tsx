@@ -11,30 +11,9 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AuthForm />} />
-        <Route
-          path="/blogs"
-          element={
-            <ProtectedRoute>
-              <Blogs />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/blogs/new"
-          element={
-            <ProtectedRoute>
-              <BlogCreate />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/blogs/:id/edit"
-          element={
-            <ProtectedRoute>
-              <BlogEdit />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs/new" element={<BlogCreate />} />
+        <Route path="/blogs/:id/edit" element={<BlogEdit />} />
         <Route path="/blogs/:id/view" element={<BlogView />} />
       </Routes>
     </BrowserRouter>

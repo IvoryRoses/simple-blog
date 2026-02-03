@@ -38,6 +38,7 @@ export default function AuthForm() {
             setUser({
               id: data.user.id,
               email: data.user.email!,
+              user_metadata: data.user.user_metadata,
             }),
           );
           navigate("/blogs");
@@ -63,7 +64,7 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-linear-to-r from-purple-400 via-pink-400 to-red-400 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#f6f7f9] p-4">
       <form
         onSubmit={handleSubmit}
         className="hover:shadow-3xl w-full max-w-md rounded-xl bg-white p-10 shadow-2xl transition-all"
@@ -85,7 +86,7 @@ export default function AuthForm() {
             </label>
             <input
               type="text"
-              className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+              className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-blue-500 focus:ring focus:ring-purple-200"
               placeholder="Your Name"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
@@ -100,7 +101,7 @@ export default function AuthForm() {
           </label>
           <input
             type="email"
-            className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+            className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-blue-500 focus:ring focus:ring-purple-200"
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -114,7 +115,7 @@ export default function AuthForm() {
           </label>
           <input
             type="password"
-            className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+            className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-blue-500 focus:ring focus:ring-purple-200"
             placeholder="********"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -129,7 +130,7 @@ export default function AuthForm() {
             </label>
             <input
               type="password"
-              className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+              className="w-full rounded-lg border border-gray-300 p-3 text-gray-800 shadow-sm transition outline-none focus:border-blue-500 focus:ring focus:ring-purple-200"
               placeholder="********"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -143,8 +144,8 @@ export default function AuthForm() {
           disabled={loading}
           className={`w-full transform rounded-lg py-3 text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg ${
             isLogin
-              ? "bg-purple-500 hover:bg-purple-600"
-              : "bg-pink-500 hover:bg-pink-600"
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
           {loading
@@ -161,7 +162,7 @@ export default function AuthForm() {
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="font-semibold text-purple-600 hover:underline"
+            className="font-semibold text-blue-600 hover:underline"
           >
             {isLogin ? "Sign up" : "Login"}
           </button>

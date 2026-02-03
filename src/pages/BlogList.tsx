@@ -58,7 +58,7 @@ export default function BlogsList() {
   };
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen bg-[#f6f7f9] p-8">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-800">Blogs</h1>
         <div className="flex gap-2">
@@ -94,19 +94,21 @@ export default function BlogsList() {
                 />
               )}
               <div className="p-4">
-                <a className="text-[#a2a8ae]">{blog.created_at}</a>
+                <a className="text-[#a2a8ae]">
+                  {new Date(blog.created_at).toLocaleDateString()}
+                </a>
                 <h2 className="text-xl font-bold">{blog.title}</h2>
 
                 <p className="mt-2 h-11 overflow-hidden text-gray-700">
                   {blog.content}
                 </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <p className="text-sm text-gray-500">
+                <div className="mt-4 mb-4 flex items-center justify-between border-t border-[#a2a8ae]">
+                  <p className="mt-4 text-sm text-gray-500">
                     By {blog.author_name || "Anonymous"}
                   </p>
                   <p
                     onClick={() => navigate(`/blogs/${blog.id}/view`)}
-                    className="cursor-pointer text-sm text-blue-500 hover:underline"
+                    className="mt-4 cursor-pointer text-sm text-blue-500 hover:underline"
                   >
                     View More →
                   </p>
